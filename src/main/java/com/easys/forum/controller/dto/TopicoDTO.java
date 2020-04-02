@@ -1,8 +1,8 @@
 package com.easys.forum.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
 
 import com.easys.forum.model.Topico;
 
@@ -27,7 +27,7 @@ public class TopicoDTO {
 		this.dataCriacao = topico.getDataCriacao();
 	}
 
-	public static List<TopicoDTO> converter(List<Topico> topicos) {
-		return topicos.stream().map(TopicoDTO::new).collect(Collectors.toList());
+	public static Page<TopicoDTO> converter(Page<Topico> topicos) {
+		return topicos.map(TopicoDTO::new);
 	}
 }
