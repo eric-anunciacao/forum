@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.easys.forum.model.Usuario;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -26,6 +27,20 @@ public class TokenService {
 		Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
 		return Jwts.builder().setIssuer("API do Fórum").setSubject(usuario.getId().toString()).setIssuedAt(hoje)
 				.setExpiration(dataExpiracao).signWith(SignatureAlgorithm.HS256, secretKey).compact();
+	}
+
+	public boolean isTokenValid(String token) {
+		try {
+			Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public Long getUserId(String token) {
+		Claims claims = Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
+		return Long.parseLong(claims.getSubject());
 	}
 
 }
